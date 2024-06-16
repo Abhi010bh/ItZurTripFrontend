@@ -18,21 +18,21 @@ function Cover() {
   return (
     <>
     
-      <div className="coverDiv grid grid-rows-2 md:grid-rows-2 p-0 m-0">
+      <div className="coverDiv grid grid-rows-2 md:grid-rows-1 p-0 m-0">
       
         <div>
           <div
             style={{ fontFamily: "Roboto" }}
             className="text-5xl text-green-700 font-bold tracking-tighter"
           >
-            Shuchi
+            It's Your Trip
           </div>
 
           <div
             style={{ fontFamily: "Open Sans " }}
             className="font text-slate-800 "
           >
-            Transforming Waste into wealth
+            Your place to take places
           </div>
         </div>
         
@@ -42,7 +42,7 @@ function Cover() {
           variant="text"
           style={{ fontFamily: "Open Sans", color: "#FA4A0C" }}
           className=" text-xl mb-10 font-bold border-2"
-          onClick={()=>{navigate("/reacttwo/Login")}}
+          onClick={()=>{navigate("/Login")}}
         >
           Get Started
   </Button>

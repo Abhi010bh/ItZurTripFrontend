@@ -27,10 +27,10 @@ function App() {
         
         
         <Routes>
-          <Route path="/reacttwo/" element={<Cover />} />
-          <Route path="/reacttwo/Login" element={<LoginForm />} />
-          <Route path="/reacttwo/Animate" element={<Animate />} />
-          <Route path="/reacttwo/SignUpForm" element={<SignUpForm />} />
+          <Route path="/" element={<Cover />} />
+          <Route path="/Login" element={<LoginForm />} />
+          <Route path="/Animate" element={<Animate />} />
+          <Route path="/SignUpForm" element={<SignUpForm />} />
           
         </Routes>
         

@@ -19,7 +19,7 @@ export const QuickAccess=()=>{
           icon: <Home />,
           name: "Home",
           click: () => {
-            navigator("/reacttwo/");
+            navigator("/");
           },
         },
         {
@@ -33,13 +33,13 @@ export const QuickAccess=()=>{
           icon: <LoginTwoTone />,
           name: "Login",
           click: () => {
-            navigator("/reacttwo/Login");
+            navigator("/Login");
           },
         },
         {
           icon: <ShareIcon />,
           name: "SignUp",
-          click: () => {navigator("/reacttwo/SignUp")},
+          click: () => {navigator("/SignUp")},
         },
       ];
     
