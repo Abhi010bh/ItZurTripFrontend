@@ -17,6 +17,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import {useAuth} from "../provider/authProvider";
 
 export const FormComponent = ()=>{
 
@@ -28,11 +29,18 @@ export const FormComponent = ()=>{
     password:""
   })
 
-  const handleSubmit=async (event)=>{
+  const {setToken}= useAuth()
+  
+
+  const handleLogin=async (event)=>{
     event.preventDefault();
     try{
       const resp=await axios.post("http://localhost:8000/User/login",User);
       console.log(resp.data);
+
+      setToken(resp.data.token);
+      navigate('/ProfileInterface')
+      
     }
     catch(e){
       console.log(e);
@@ -55,7 +63,7 @@ return (
 <>
 
 <div style={{fontFamily:'Open Sans',}} className="form bg-gray-100  mx-auto w-full h-full max-w-xs  outline-none">
-  <form class="border-2   rounded px-8 pt-6 pb-8 " onSubmit={handleSubmit}>
+  <form class="border-2   rounded px-8 pt-6 pb-8 " onSubmit={handleLogin}>
     <div class="mb-4 ">
       <label class="block text-gray-700 text-sm font-bold mb-2" for="Email">
         Email
@@ -78,7 +86,7 @@ return (
         Sign In
       </button>
 
-      <button class="my-2 outline-none border-0 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button"
+      <button class="my-2 py-0 outline-none border-0 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button"
         onClick={()=>{navigate("/SignUpForm")}}>
         Sign Up
       </button>

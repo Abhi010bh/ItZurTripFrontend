@@ -43,6 +43,20 @@ body {
   outline: 0;
 }
 
+.PI{
+  background-image: url('../public/view-3d-airplane-with-travel-destination-landscape.jpg');
+  background-repeat:no-repeat;
+  background-size: cover;
+  
+
+}
+
+.blurry{
+  background-color: rgba(0, 0, 0, 0.5);
+    
+backdrop-filter: blur(5px);
+}
+
 .loginDiv{
 
   background-image: url('../public/IUTBackgrnd.jpg');

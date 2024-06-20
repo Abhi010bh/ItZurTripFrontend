@@ -26,7 +26,7 @@ export const QuickAccess=()=>{
           icon: <ArrowBack />,
           name: "Back",
           click: () => {
-            navigator("/");
+            navigator("/animate");
           },
         },
         {

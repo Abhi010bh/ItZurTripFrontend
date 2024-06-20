@@ -16,6 +16,7 @@ import ArrowCircleRight from "@mui/icons-material/ArrowCircleRight";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import {useAuth} from "../provider/authProvider";
 
 export const SignUp = () => {
   const navigate = useNavigate();
@@ -26,6 +27,9 @@ export const SignUp = () => {
     password: "",
     confirmPassword: ""
   });
+
+  
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -40,7 +44,8 @@ export const SignUp = () => {
         password: User.password
       });
       console.log(resp.data);
-      navigate('/reacttwo/login'); // Redirect to login after successful signup
+      
+      navigate('/login'); // Redirect to login after successful signup
     } catch (e) {
       console.log(e);
     }
@@ -98,7 +103,7 @@ export const SignUp = () => {
             Sign Up
           </button>
           <button className="my-2 outline-none border-0 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button"
-            onClick={() => { navigate("reacttwo/login") }}>
+            onClick={() => { navigate("/login") }}>
             Back to Login
           </button>
         </div>
