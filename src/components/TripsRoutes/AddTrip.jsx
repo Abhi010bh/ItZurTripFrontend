@@ -4,10 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../provider/authProvider";
 import { Button } from "@mui/material";
 import { QuickAccess } from "../QuickAccess";
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import Animate from "../Animation";
-
+import Animate from "../Animation"; // Assuming Animation is the component that handles date selection
 
 const AddTrip = () => {
   const [trip, setTrip] = useState({
@@ -19,15 +16,20 @@ const AddTrip = () => {
     endDate: null
   });
 
+  const [message, setMessage] = useState("");
+  
+
   const handleStartDateChange = (selectedDate) => {
-    setTrip({ ...trip, startDate: selectedDate }); // Update startDate in trip state
+    setTrip({ ...trip, startDate: selectedDate });
   };
 
   const handleEndDateChange = (selectedDate) => {
-    setTrip({ ...trip, endDate: selectedDate }); // Update endDate in trip state
+    setTrip({ ...trip, endDate: selectedDate });
   };
 
   const { token } = useAuth();
+  const {setTripID}= useAuth()
+  
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -51,10 +53,14 @@ const AddTrip = () => {
       const response = await axios.post("http://localhost:8000/Trip/addTrip", trip, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      alert("Trip added successfully");
+      setTripID(response.data.tripId);
+      console.log(response.data.tripId);
+      setMessage("Trip added successfully");
+      alert(`Trip added successfully ${response.data.tripId}`);
       navigate("/ProfileInterface");
     } catch (error) {
       console.error(error);
+      setMessage("Error adding trip");
       alert("Error adding trip");
     }
   };
@@ -65,22 +71,22 @@ const AddTrip = () => {
   ];
 
   useEffect(() => {
-    console.log(trip); // Log the updated trip state
-  }, [trip]); // Only log when trip state changes
+    console.log(trip);
+  }, [trip]);
 
   return (
     <>
       <QuickAccess />
-
-      <div className="relative blurry pb-5 row-span-2 md:col-span-2  mb-0  pt-10 mt-0">
+      <div className="relative blurry pb-5 row-span-2 md:col-span-2 mb-0 pt-10 mt-0">
         <div style={{ fontFamily: 'Open Sans' }} className="form outline rounded-lg bg-white items-center justify-center my-auto mx-auto max-w-lg outline-none">
-          <form className="border-2   rounded px-8 pt-6 pb-8 " onSubmit={handleSubmit}>
+          <form className="border-2 rounded px-8 pt-6 pb-8" onSubmit={handleSubmit}>
             <span className="text-gray-500 mb-2 text-sm">Welcome</span>
-            <div className="mb-4 ">
-              <label className="block  text-lg font-bold mb-2" htmlFor="TripName">
+            {message && <div className="mb-4 text-center">{message}</div>}
+            <div className="mb-4">
+              <label className="block text-lg font-bold mb-2" htmlFor="TripName">
                 Name Your Trip
               </label>
-              <input className=" bg-transparent border-b-0 border-t-0 border-l-0 border-r-0 w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+              <input className="bg-transparent border-b-0 border-t-0 border-l-0 border-r-0 w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
                 name="tripName"
                 value={trip.tripName}
                 onChange={handleChange}
@@ -91,71 +97,64 @@ const AddTrip = () => {
                 <option key={index} value={place} />
               ))}
             </datalist>
-            <div className="mb-4 ">
+            <div className="mb-4">
               <label className="block text-lg font-bold mb-2" htmlFor="source">
                 Where From?
               </label>
-              <input
-                className=" bg-transparent border-b-0 border-t-0 border-l-0 border-r-0 w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+              <input className="bg-transparent border-b-0 border-t-0 border-l-0 border-r-0 w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
                 type="text"
                 name="source"
                 list="sourceSuggestions"
                 value={trip.source}
                 onChange={handleChange}
-                placeholder="Source"
-              />
+                placeholder="Source" />
               <datalist id="sourceSuggestions">
                 {placeSuggestions.map((place, index) => (
                   <option key={index} value={place} />
                 ))}
               </datalist>
             </div>
-            <div className="mb-4 ">
+            <div className="mb-4">
               <label className="block text-lg font-bold mb-2" htmlFor="destination">
                 Where To?
               </label>
-              <input
-                className="w-full bg-transparent border-0 py-2 leading-tight focus:outline-none"
+              <input className="w-full bg-transparent border-0 py-2 leading-tight focus:outline-none"
                 type="text"
                 name="destination"
                 list="destinationSuggestions"
                 value={trip.destination}
                 onChange={handleChange}
-                placeholder="Destination"
-              />
+                placeholder="Destination" />
               <datalist id="destinationSuggestions">
                 {placeSuggestions.map((place, index) => (
                   <option key={index} value={place} />
                 ))}
               </datalist>
             </div>
-            <div className="mb-4 ">
-              <label className="block  text-lg font-bold mb-2" htmlFor="startDate">
+            <div className="mb-4">
+              <label className="block text-lg font-bold mb-2" htmlFor="startDate">
                 Start Date
               </label>
               <Animate onChangeDate={handleStartDateChange} />
-              <label className="block  text-lg font-bold mb-2" htmlFor="endDate">
+              <label className="block text-lg font-bold mb-2" htmlFor="endDate">
                 End Date
               </label>
               <Animate onChangeDate={handleEndDateChange} />
             </div>
-           
             <span className="text-gray-500 mb-1">Companions</span>
             {trip.users.map((user, index) => (
-              <div className="mb-4 " key={index}>
-                <label className="block  text-lg font-bold mb-2" >
+              <div className="mb-4" key={index}>
+                <label className="block text-lg font-bold mb-2">
                   User{index + 1} Email
                 </label>
-                <input className=" bg-transparent border-b-0 border-t-0 border-l-0 border-r-0 w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+                <input className="bg-transparent border-b-0 border-t-0 border-l-0 border-r-0 w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
                   type="email"
                   value={user}
                   onChange={(e) => handleUserChange(index, e.target.value)}
-                  placeholder="User Email"
-                />
+                  placeholder="User Email" />
               </div>
             ))}
-
-            <div className="flex content-evenly items-center  flex-col flex-nowrap">
+            <div className="flex content-evenly items-center flex-col flex-nowrap">
               <Button
                 color="success"
                 size="lg"
@@ -166,7 +165,7 @@ const AddTrip = () => {
                 color="success"
                 onClick={addUserField}
                 size="lg"
-                type="button" // Changed to button type to prevent form submission
+                type="button"
                 className="my-2 rounded-2xl bg-green-400 min-w-full text-white"
               >Add User</Button>
             </div>
