@@ -9,6 +9,8 @@ import PrivateRoute from "./components/PrivateRoute";
 import ProfileInterface from "./components/ProfileInterface";
 import AddTrip from "./components/TripsRoutes/AddTrip";
 
+
+
 function App() {
   return (
     <StyledEngineProvider injectFirst>

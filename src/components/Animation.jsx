@@ -15,7 +15,7 @@ function Animate({ onChangeDate }) {
   return (
     
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-       <DatePicker value={value} onChange={(newValue) => setValue(newValue)} />
+       <DatePicker value={value} onChange={handleDateChange} />
     </LocalizationProvider>
     
   );
