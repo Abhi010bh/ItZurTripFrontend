@@ -27,6 +27,8 @@ body {
 
 
 
+
+
 /*LoginForm*/
 .loginUpper {
   background-image: url('../public/5685020.jpg');
@@ -46,19 +48,31 @@ body {
 }
 
 .PI{
-  background-image: url('../public/view-3d-airplane-with-travel-destination-landscape.jpg');
+  background-image: url('../public/ian-dooley-3NCA3tbaE5I-unsplash.jpg');
+  background-repeat:no-repeat;
+  background-size: cover;
+}
+
+.blurry{
+  background-color:rgba(0,0,0,0.5);
+  backdrop-filter:blur(5px);
+}
+
+.travel{
+  background-image: url('../public/composition-small-airplanes-bus-passport-map.jpg');
   background-repeat:no-repeat;
   background-size: cover;
   
 
 }
-
-.blurry{
-  background-color: rgba(0, 0, 0, 0.5);
-    
+.travelGlass{
+  background: rgba(255, 255, 255, 0.25);
+border-radius: 16px;
+box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 backdrop-filter: blur(5px);
+-webkit-backdrop-filter: blur(5px);
+border: 1px solid rgba(255, 255, 255, 0.5);
 }
-
 .loginDiv{
 
   background-image: url('../public/IUTBackgrnd.jpg');
@@ -72,8 +86,30 @@ backdrop-filter: blur(5px);
   }
 }
 
+
+
 .form{
   @media (max-width: 720px) {
     width: 100dvh;
   }
+}
+
+.slide-in{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100vh;
+  background:#F0F0F0;
+  transform-origin:bottom;
+}
+
+.slide-out{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100vh;
+  background:#F0F0F0;
+  transform-origin:top;
 }

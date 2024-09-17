@@ -8,6 +8,10 @@ import SignUpForm from "./components/SignUpForm";
 import PrivateRoute from "./components/PrivateRoute";
 import ProfileInterface from "./components/ProfileInterface";
 import AddTrip from "./components/TripsRoutes/AddTrip";
+import {Trip} from "./components/Trip";
+import {AnimatePresence} from "framer-motion";
+import {TripPage} from "./components/TripsRoutes/TripPage";
+import {Expenses} from "./components/TripsRoutes/Expense";
 
 
 
@@ -22,7 +26,10 @@ function App() {
           <Route path="/SignUpForm" element={<SignUpForm />} />
           <Route path="/ProfileInterface" element={<ProfileInterface />} />
           <Route path="/Trip" element={<AddTrip />}  />
-          <Route path="/animate" element={<Animate />} />
+          <Route path="/TripProfile" element={<Trip />}  />
+          <Route path="/Trip/View/" element={<TripPage />} />
+          <Route path="/Trip/Expense" element={<Expenses />  } />
+
         </Routes>
       </BrowserRouter>
     </StyledEngineProvider>

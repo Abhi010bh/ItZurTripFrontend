@@ -24,7 +24,7 @@ function ProfileInterface() {
           </div>
 
           <div className="flex flex-col items-start">
-            <a className="no-underline text-white" onClick={()=>{navigate('/Trip')}}>
+            <a className="no-underline text-white" onClick={()=>{navigate('/TripProfile')}}>
               <h1 style={{ fontFamily: "Helvetica" }} className="md:text-7xl text-5xl">
                 DIVE INTO EXISTING
               </h1>
