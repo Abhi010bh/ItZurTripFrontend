@@ -37,16 +37,20 @@ export const FormComponent = ()=>{
     try{
       const resp=await axios.post("http://localhost:8000/User/login",User);
       console.log(resp.data);
-
-      setToken(resp.data.token);
-      navigate('/ProfileInterface')
-      
-    }
-    catch(e){
-      console.log(e);
-    }
+      if (resp.status === 200) {
+        alert("Login successful");
+        setToken(resp.data.token)
+        navigate("/ProfileInterface");
+      }
+    } catch (error) {
+      if (error.response && error.response.data.error) {
+        alert(error.response.data.error);
+      } else {
+        alert("An error occurred. Please try again.");
+      }
 
   }
+}
 
   const handleChange=(event)=>{
     event.preventDefault()
@@ -96,6 +100,8 @@ return (
   </form>
   
 </div>
-</>)
+</>
+)
 }
 
+export default FormComponent;

@@ -12,6 +12,9 @@ import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
 import { useNavigate } from "react-router-dom";
 import { QuickAccess } from "./QuickAccess";
 import SimpleBottomNavigation from "./SimpleBottomNavigation";
+
+
+
 function Cover() {
   const navigate=useNavigate();
   

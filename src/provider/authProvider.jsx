@@ -7,11 +7,18 @@ const AuthContext = createContext();
 // AuthProvider component to provide auth context to its children
 const AuthProvider = ({ children }) => {
   const [token, setToken_] = useState(localStorage.getItem("token"));
+  const [tripId, setTripId] = useState(localStorage.getItem("tripId")); // Initialize tripId state
+ 
   
 
   const setToken = (newToken) => {
     setToken_(newToken);
     
+  };
+
+  const setTripID = (newTripId) => {
+    console.log(newTripId);
+    setTripId(newTripId);
   };
 
   useEffect(() => {
@@ -28,10 +35,13 @@ const AuthProvider = ({ children }) => {
       
     }}, [token]);
 
-  const contextValue = useMemo(() => ({
-    token,
-    setToken,
-  }), [token]);
+    const contextValue = useMemo(() => ({
+      token,
+      setToken,
+      tripId, // Include tripId in the context value
+      setTripID, // Function to set tripId
+    }), [token, tripId]);
+  
 
   return (
     <AuthContext.Provider value={contextValue}>
