@@ -50,13 +50,13 @@ const AuthProvider = ({ children }) => {
   );
 };
 
+
+
+export default AuthProvider;
 // Custom hook to use the auth context
 export const useAuth = () => {
   return useContext(AuthContext);
 };
-
-export default AuthProvider;
-
 
 /*if (token) {
       const currentTime = Date.now() / 1000;

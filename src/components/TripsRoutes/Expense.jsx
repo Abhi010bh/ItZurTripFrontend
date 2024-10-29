@@ -23,7 +23,7 @@ export const Expenses = () => {
   useEffect(() => {
     const fetchExpenses = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/Expense/${tripId}/expenses`, {
+        const response = await axios.get(`http://localhost:8000/trips/${tripId}/expenses`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -50,7 +50,7 @@ export const Expenses = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`http://localhost:8000/Expense/${tripId}/expenses`, newExpense, {
+      const response = await axios.post(`http://localhost:8000/trips/${tripId}/expenses`, newExpense, {
         headers: {
           Authorization: `Bearer ${token}`
         }

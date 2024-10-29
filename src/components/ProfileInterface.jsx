@@ -6,6 +6,7 @@ function ProfileInterface() {
 
   
   const navigate=useNavigate()
+  
   return (
     <>
       <QuickAccess />
