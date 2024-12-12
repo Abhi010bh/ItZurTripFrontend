@@ -3,14 +3,17 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  font-family: 'Open Sans', sans-serif;
+}
 
-body {
+.body-custom {
   margin: 0;
   padding: 0;
   background-image: url('../public/5685020.jpg');
   background-repeat:no-repeat;
   background-size: cover;
-  
+  overflow: hidden;
 }
 
 
@@ -120,3 +123,263 @@ border: 1px solid rgba(255, 255, 255, 0.5);
 .leaflet-control-attribution {
   filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
 }*/
+
+body {
+  background-image: url('../public/composition-small-airplanes-bus-passport-map.jpg');
+  background-attachment: fixed; /* Makes the background static */
+  background-size: cover; /* Ensures the image covers the entire area */
+  background-position: center; /* Centers the image */
+  background-repeat: no-repeat; /* Prevents tiling */
+  height: 100vh; /* Full height for the viewport */
+  width: 100%; /* Full width */
+}
+
+.react-calendar {
+  border: none;
+  border-radius: 16px;
+  background-color: #26c6da;
+  padding:1rem;
+  font-family: 'Inter', sans-serif; /* Clean, modern font */
+  color: #fafafa; /* Neutral text color */
+  
+  width: 720px;
+  max-width: 100%; /* Ensure responsiveness */
+  margin: 0 auto; /* Center the calendar */
+}
+
+/* Month and navigation styling */
+.react-calendar__navigation {
+  display: flex;
+  
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 0.5rem;
+  margin-bottom: 0.5rem;
+  width: 100%;
+}
+
+.react-calendar__navigation button {
+  
+  border: none;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #fafafa;
+  cursor: pointer;
+}
+
+/* Month and year on the left */
+.react-calendar__navigation__label {
+  font-size: 2rem;
+  font-weight: 400;
+  color: #fafafa;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  text-transform: capitalize;
+  margin-right: auto;
+   /* Pushes the label to the left */
+}
+/* Make only the month (e.g., December) bold */
+.react-calendar__navigation__label span:first-child {
+  font-weight: 600;
+  font-size: larger; /* Apply bold to the month */
+}
+
+/* Left arrow and right arrow styles */
+.react-calendar__navigation__prev2,
+.react-calendar__navigation__prev,
+.react-calendar__navigation__next,
+.react-calendar__navigation__next2 {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #fafafa;
+  cursor: pointer;
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+
+
+/* Weekday names styling */
+.react-calendar__month-view__weekdays {
+  display: grid; /* Added this line */
+  grid-template-columns: repeat(7, 1fr); /* Ensures 7 columns */
+  text-align: center;
+  text-transform:none;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fafafa !important; /* Subtle gray color */
+  padding-bottom: 0.5rem; /* Adds space between weekdays and the day tiles */
+  margin-top: 0.8rem;
+}
+
+.react-calendar__month-view__weekdays__weekday {
+  padding: 0.5rem;
+}
+
+/* Calendar grid layout */
+.react-calendar__month-view__days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr); /* Ensures 7 columns */
+ 
+  
+}
+
+/* Day tiles styling */
+.react-calendar__tile {
+  
+  color:#e4e4e7
+  !important;
+  border-radius: 8px;
+  padding: 0.8rem;
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.react-calendar__tile:hover {
+  background: #e8e8ff !important; /* Subtle hover color */
+  color: #6c63ff !important;
+  font-weight: 600;
+}
+
+/* Highlighted dates (like today's date) */
+.react-calendar__tile--now {
+
+  font-weight: 600;
+  font-size:2rem;
+  border-radius: 7rem;
+  color:#71717a !important;
+}
+
+
+
+/* Event block styling */
+.react-calendar__tile .event {
+  
+  color: #3b3b3b;
+  padding: 0.3rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-align: center;
+  margin: 0.2rem auto;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Make event blocks responsive */
+.react-calendar__tile .event:hover {
+  background-color: #b6a3ff;
+  color: white;
+  font-weight: 600;
+}
+
+/* Ensure events stack neatly */
+.react-calendar__tile .event-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+
+
+
+
+.react-calendar__month-view__weekdays abbr {
+  text-decoration: none; /* Remove underline */
+  -webkit-text-decoration: none; /* For WebKit browsers */
+}
+
+.react-calendar__tile.start-date {
+   /* Light blue for the start date */
+  color: #a855f7 !important;
+  border-radius: 8px;
+  font-size: 1.5rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background: #e8e8ff !important; /* Subtle hover color */
+  font-weight: 600;
+}
+
+.react-calendar__tile.start-date::after {
+  content: "✈️"; /* Airplane emoji or use an icon font */
+  position: absolute;
+  top: 10px; /* Adjust placement */
+  left: 25%;
+  transform: translateX(-50%);
+  font-size: 1.2rem; /* Adjust icon size */
+}
+
+/* End date styling */
+.react-calendar__tile.end-date {
+  border-radius: 8px;
+  color:#8b5cf6 !important;
+  font-size: 1.5rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background: #e8e8ff !important; /* Subtle hover color */
+  font-weight: 600;
+}
+
+.react-calendar__tile.end-date::after {
+  content: "🚩"; /* Airplane emoji or use an icon font */
+  position: absolute;
+  bottom: 10px; /* Adjust placement */
+  left: 75%;
+  transform: translateX(-50%);
+  font-size: 1.2rem; /* Adjust icon size */
+}
+
+/* Normal highlighted dates */
+.react-calendar__tile.highlighted {
+  color: #71717a !important;
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+
+/* Hide the default checkbox */
+.custom-checkbox {
+  -webkit-appearance: none; /* Remove default checkbox */
+  -moz-appearance: none; /* Remove default checkbox */
+  appearance: none; /* Remove default checkbox */
+  border: 2px solid #ccc;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ccc; /* Border color of the checkbox */
+  border-radius: 5px; /* Optional: rounded corners */
+  position: relative;
+  cursor: pointer;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+/* Custom checkmark (tick) */
+.custom-checkbox:checked::after {
+  content: ''; 
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 10px;
+  height: 10px;
+  background-color: #4CAF50; /* Custom tick color */
+  border-radius: 2px; /* Optional: rounded tick */
+}
+
+/* On hover, change the border color */
+.custom-checkbox:hover {
+  border-color: #4CAF50;
+}

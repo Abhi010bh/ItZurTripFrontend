@@ -23,7 +23,7 @@ function Cover() {
     <>
     
     
-      <div className="coverDiv grid grid-rows-2 md:grid-rows-1 p-0 m-0">
+      <div className="coverDiv body-custom grid grid-rows-2 md:grid-rows-1 p-0 m-0">
       <QuickAccess />
         <div>
           <div
@@ -42,15 +42,17 @@ function Cover() {
         </div>
         
 
-       <Button
-          endIcon={<ArrowCircleRightIcon />}
-          variant="text"
-          style={{ fontFamily: "Open Sans", color: "#FA4A0C" }}
-          className=" text-xl mb-10 font-bold border-2"
+       <button
+          
+          style={{
+            fontFamily: "Open Sans, sans-serif", // Removed !important and adjusted syntax
+            
+          }}
+          className=" text-lg  shadow-xl shadow-gray-200 rounded-3xl mb-10 py-3 font-bold bg-blend-screen tracking-wide bg-[#FA4A0A] text-white"
           onClick={()=>{navigate("/Login")}}
         >
-          Get Started
-  </Button>
+          GET STARTED
+  </button>
   <SimpleBottomNavigation />
   
       </div>

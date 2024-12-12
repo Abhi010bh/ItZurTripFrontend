@@ -7,7 +7,6 @@ import { QuickAccess } from "../QuickAccess";
 import Animate from "../Animation"; // Assuming Animation is the component that handles date selection
 import { Avatar } from "@mui/material";
 const Avatar1 = "/images/FaceAvatar.jpg";
-
 import {
   MapContainer,
   Marker,
@@ -95,7 +94,8 @@ function TripForm({setMapRouting,setFormData}) {
                 src={Avatar1}
                 style={{ minHeight: "48px", minWidth: "48px" }}
               />
-              <div className="ml-2 text-center  text-3xl font-semibold p-5  text-red-400">
+              
+              <div className="ml-2 text-center  text-3xl font-semibold p-5  text-red-400" >
                 {userName}
               </div>
             </div>

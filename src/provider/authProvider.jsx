@@ -8,7 +8,9 @@ const AuthContext = createContext();
 const AuthProvider = ({ children }) => {
   const [token, setToken_] = useState(localStorage.getItem("token"));
   const [tripId, setTripId] = useState(localStorage.getItem("tripId")); // Initialize tripId state
- 
+  const [userName,setUserName_]=useState(localStorage.getItem("userName"));
+  const [userID,setUserID_]=useState(localStorage.getItem("userID"));
+   
   
 
   const setToken = (newToken) => {
@@ -20,6 +22,18 @@ const AuthProvider = ({ children }) => {
     console.log(newTripId);
     setTripId(newTripId);
   };
+
+  const setUserName=(userName)=>{
+    console.log(userName);
+    setUserName_(userName);
+    
+  }
+
+  const setUserID=(newuserID)=>{
+    console.log(newuserID);
+    setUserID_(newuserID);
+    
+  }
 
   useEffect(() => {
     
@@ -39,8 +53,12 @@ const AuthProvider = ({ children }) => {
       token,
       setToken,
       tripId, // Include tripId in the context value
-      setTripID, // Function to set tripId
-    }), [token, tripId]);
+      setTripID,
+      userName,
+      setUserName, // Function to set tripId
+      userID,
+      setUserID
+    }), [token, tripId,userID]);
   
 
   return (
@@ -53,6 +71,7 @@ const AuthProvider = ({ children }) => {
 
 
 export default AuthProvider;
+
 // Custom hook to use the auth context
 export const useAuth = () => {
   return useContext(AuthContext);

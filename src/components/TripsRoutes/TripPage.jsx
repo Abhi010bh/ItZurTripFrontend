@@ -1,72 +1,32 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../provider/authProvider";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
-import { useNavigate } from "react-router-dom";
+import RenderMap from "../MapComponents/RenderMap";
+import dayjs from "dayjs";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css"; // Import calendar styles
+import { Avatar, Button, Icon } from "@mui/material";
+import {
+  LocationCity,
+  LocationCityOutlined,
+  LocationDisabledOutlined,
+  LocationOn,
+  LocationOnOutlined,
+} from "@mui/icons-material";
+import ExpenseChart from "./ExpenseChart";
+import CircleCountdownTimer from "./CircleCountdownTimer";
+import TodoList from "./TodoList";
+const Avatar1 = "/images/FaceAvatar.jpg";
 
-const predefinedLocations = {
-  "New York": {
-    name: "New York",
-    description:
-      "The bustling metropolis known for its iconic skyline and vibrant culture.",
-  },
-  "Los Angeles": {
-    name: "Los Angeles",
-    description:
-      "The entertainment capital of the world, famous for Hollywood and sunny beaches.",
-  },
-  Chicago: {
-    name: "Chicago",
-    description:
-      "A city renowned for its architecture, deep-dish pizza, and rich history.",
-  },
-  Houston: {
-    name: "Houston",
-    description:
-      "America's fourth-largest city, known for its space center and Southern hospitality.",
-  },
-  Phoenix: {
-    name: "Phoenix",
-    description:
-      "The desert city offering year-round sunshine and stunning natural landscapes.",
-  },
-  Philadelphia: {
-    name: "Philadelphia",
-    description:
-      "The birthplace of American independence, home to iconic landmarks and cheesesteaks.",
-  },
-  "San Antonio": {
-    name: "San Antonio",
-    description:
-      "Famous for the Alamo and River Walk, blending history with modern attractions.",
-  },
-  "San Diego": {
-    name: "San Diego",
-    description:
-      "Known for its perfect weather, beautiful beaches, and vibrant arts scene.",
-  },
-  Dallas: {
-    name: "Dallas",
-    description:
-      "A dynamic city known for its business prowess, Tex-Mex cuisine, and cultural diversity.",
-  },
-  "San Jose": {
-    name: "San Jose",
-    description:
-      "The heart of Silicon Valley, where innovation meets California's laid-back lifestyle.",
-  },
-};
-
-const EditTrip = (trip) => {
+const EditTrip = (trip, navigate) => {
   try {
     console.log(trip);
     console.log("Edit Trip called");
     navigate(`/Trip/EditTrip`, { state: { trip } });
-
-    
   } catch (error) {
     console.log(error);
   }
@@ -74,22 +34,26 @@ const EditTrip = (trip) => {
 
 export const TripPage = () => {
   const [trip, setTrip] = useState(null);
-  const [sourceInfo, setSourceInfo] = useState(null);
-  const [destinationInfo, setDestinationInfo] = useState(null);
-  const { token } = useAuth();
+  const [loading, setLoading] = useState(true);
+  const [dates, setDates] = useState(null);
+  const [highlightedDates, setHighlightedDates] = useState([]);
+  const [currentCity, setCurrentCity] = useState();
+  const [breakdown, setBreakdown] = useState(null);
+  const { token, userName } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchTrip = async () => {
       try {
+        console.log("Location state:", location.state);
         const tripId = location.state?.trip?._id;
         if (!tripId) {
           console.error("Trip ID not found in location state.");
           return;
         }
 
-        const response = await axios.get(
+        const tripResponse = await axios.get(
           `http://localhost:8000/Trip/trips/${tripId}`,
           {
             headers: {
@@ -98,19 +62,29 @@ export const TripPage = () => {
           }
         );
 
-        setTrip(response.data);
+        const analyticsResponse = await axios.get(
+          `http://localhost:8000/Trip/${tripId}/analytics`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
-        if (response.data.source && predefinedLocations[response.data.source]) {
-          setSourceInfo(predefinedLocations[response.data.source]);
-        }
-        if (
-          response.data.destination &&
-          predefinedLocations[response.data.destination]
-        ) {
-          setDestinationInfo(predefinedLocations[response.data.destination]);
-        }
+        console.log("Analytical Reports:", analyticsResponse.data);
+        setBreakdown(analyticsResponse.data);
+
+        setTrip(tripResponse.data);
+
+        setLoading(false); // Stop loading once the data is fetched
+        const Dates = {
+          startDate: tripResponse.data.startDate,
+          endDate: tripResponse.data.endDate,
+        };
+        setDates(Dates);
       } catch (error) {
         console.error("Error fetching trip:", error);
+        setLoading(false);
       }
     };
 
@@ -124,149 +98,168 @@ export const TripPage = () => {
       day: "numeric",
     });
   };
+  useEffect(() => {
+    if (dates && dates.startDate && dates.endDate) {
+      const startDate = dayjs(dates.startDate);
+      const endDate = dayjs(dates.endDate);
 
-  const generateCaption = (source, destination) => {
-    if (!source || !destination) return "";
-    return `From the ${
-      source.name
-    }'s ${source.description.toLowerCase()} to the ${
-      destination.name
-    }'s ${destination.description.toLowerCase()}, this trip promises adventure and unforgettable moments.`;
+      let tempDates = [];
+      let currentDate = startDate;
+
+      while (
+        currentDate.isBefore(endDate) ||
+        currentDate.isSame(endDate, "day")
+      ) {
+        tempDates.push(currentDate.format("YYYY-MM-DD")); // Store as formatted string
+        currentDate = currentDate.add(1, "day");
+      }
+
+      console.log("Generated highlightedDates:", tempDates);
+      setHighlightedDates(tempDates); // Store formatted dates
+      console.log(userName);
+    }
+  }, [dates]);
+
+  // Only run this effect when `dates` changes
+
+  const tileClassName = ({ date, view }) => {
+    if (view === "month") {
+      const dateStr = dayjs(date).format("YYYY-MM-DD");
+
+      if (highlightedDates.includes(dateStr)) {
+        if (dateStr === highlightedDates[0]) {
+          return "start-date"; // Start date
+        } else if (dateStr === highlightedDates[highlightedDates.length - 1]) {
+          return "end-date"; // End date
+        }
+        return "highlighted"; // Normal highlighted dates
+      }
+    }
+    return null;
   };
 
   const handleClick = () => {
     navigate(`/Trip/Expense`, { state: { trip } });
   };
 
+  if (loading) {
+    return <div>Loading trip details...</div>; // Show loading message while fetching
+  }
+
   return (
-    <div className="travel p-2 h-screen" style={{ fontFamily: "Open Sans" }}>
-      <div className="grid grid-cols-3 gap-5">
-        <div className="col-span-1">
-          {trip && (
-            <div className="text-white m-14 mt-24 max-w-sm rounded overflow-hidden shadow-lg bg-cyan-500">
-              <img
-                className="w-full"
-                src="../../../public/images/Barcelona.jpg"
-                alt="Sunset in the mountains"
-              />
-              <div className="px-6 py-4">
-                <div className="font-bold text-xl mb-2">{trip.tripName}</div>
-                <p className="text-white italic mb-2">
-                  {sourceInfo &&
-                    destinationInfo &&
-                    generateCaption(sourceInfo, destinationInfo)}
-                </p>
+    <>
+      <div
+        className="full-screen-background p-2"
+        style={{ fontFamily: "Open Sans" }}
+      >
+        <div className="grid grid-cols-2 ">
+          <div className="col-span-1">
+            {trip && (
+              <div
+                className="text-black m-10 mt-11 p-10 max-h-sm rounded-2xl overflow-hidden shadow-lg  bg-[#fafafa]"
+                style={{ fontFamily: "Roboto" }}
+              >
+                <div className="flex flex-col ">
+                  <div className="flex flex-row items-center justify-start">
+                    <Avatar
+                      alt="Remy Sharp"
+                      src={Avatar1}
+                      style={{ minHeight: "64px", minWidth: "64px" }}
+                    />
+
+                    <div className="ml-2 text-center  text-3xl font-semibold p-5 ">
+                      Welcome, {userName}!
+                    </div>
+                  </div>
+                  <div className="flex items-center text-[#3f3f46]">
+                    <Icon className="text-6xl ml-5 ">
+                      <LocationOnOutlined className="w-10 h-12" />
+                    </Icon>
+                    <span className="pt-3 pl-0">
+                      You are currently in,
+                      <span className="font-bold">{currentCity}</span>
+                    </span>
+                  </div>
+                  <span className="pt-5 pb-4">So far it's been</span>
+                  <div className="flex items-center space-x-2">
+                    <CircleCountdownTimer targetDate={dates.startDate} />
+                    <ExpenseChart
+                      expenses={breakdown.ExpenseBreakdown}
+                      totalExpense={breakdown.totalExpenses}
+                    />
+                  </div>
+                </div>
               </div>
-              <div className="px-6 pt-4 pb-2">
-                <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-                  Add Users
-                </span>
-                <span
-                  className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
-                  onClick={()=>EditTrip(trip)}
-                >
-                  Edit Trip
-                </span>
-                <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-                  Delete Trip
-                </span>
-              </div>
+            )}
+            <div className="mt-8 px-10 overflow-hidden rounded-2xl">
+              <RenderMap trip={trip} setCity={setCurrentCity} />
             </div>
-          )}
-        </div>
-        <div className="col-span-2 p-24 pl-48">
-          <Box
-            sx={{
-              display: "flex",
-              flexWrap: "wrap",
-              "& > :not(style)": { m: 0, width: 1024, height: 512 },
-            }}
-          >
-            <Paper elevation={3}>
-              <div className="grid grid-cols-2 grid-rows-3 gap-5 h-full w-full p-4">
-                <div className="col-span-1 row-span-1 flex flex-col justify-center items-center px-6 p-4 h-full">
-                  <CalendarMonthIcon
-                    fontSize="large"
-                    className="rounded-3xl p-2 shadow-lg shadow-cyan-500/50 drop-shadow-2xl"
-                  />
-                  <span className="font-bold pt-1 text-gray-600">
-                    Starting Date
-                  </span>
-                  <span className="font pt-1 text-gray-600">
-                    {trip && formatStartDate(trip.startDate)}
-                  </span>
-                </div>
-                <div className="col-span-1 row-span-1 flex flex-col justify-center items-center px-6 p-4 h-full">
-                  <CalendarMonthIcon
-                    fontSize="large"
-                    className="rounded-3xl p-2 shadow-lg shadow-cyan-500/50 drop-shadow-2xl"
-                  />
-                  <span className="font-bold pt-1 text-gray-600">
-                    Ending Date
-                  </span>
-                  <span className="font pt-1 text-gray-600">
-                    {trip && formatStartDate(trip.endDate)}
-                  </span>
-                </div>
-                <div className="col-span-1 row-span-1 flex flex-col justify-center items-center px-8 p-4 h-full">
-                  <CalendarMonthIcon
-                    fontSize="large"
-                    className="rounded-3xl p-2 shadow-lg shadow-cyan-500/50 drop-shadow-2xl"
-                  />
-                  <span className="font-bold pt-1 text-gray-600">Source</span>
-                  <span className="font pt-1 text-gray-600">
-                    {sourceInfo ? sourceInfo.description : "Loading..."}
-                  </span>
-                </div>
-                <div className="col-span-1 row-span-1 flex flex-col justify-center items-center p-4 px-8 h-full">
-                  <CalendarMonthIcon
-                    fontSize="large"
-                    className="rounded-3xl p-2 shadow-lg shadow-cyan-500/50 drop-shadow-2xl"
-                  />
-                  <span className="font-bold pt-1 text-gray-600">
-                    Destination
-                  </span>
-                  <span className="font pt-1 text-gray-600">
-                    {destinationInfo
-                      ? destinationInfo.description
-                      : "Loading..."}
-                  </span>
-                </div>
-              </div>
-            </Paper>
-          </Box>
-          <div className="p-5 flex flex-col justify-center items-center">
+          </div>
+          <div className="col-span-1 pt-6">
             <Box
               sx={{
                 display: "flex",
-                flexWrap: "no-wrap",
-                gap: 5,
-                "& > :not(style)": { m: 0, width: 104, height: 96 },
+                flexWrap: "wrap",
+                "& > :not(style)": { m: 0, width: 720, height: 600 },
               }}
             >
-              <Paper
-                elevation={3}
-                className="mx-5 text-white font-bold bg-red-500 flex flex-col justify-center items-center"
-              >
-                Bookings
-              </Paper>
-              <Paper
-                elevation={3}
-                onClick={handleClick}
-                className="text-white font-bold bg-green-400 flex flex-col justify-center items-center"
-              >
-                Expenses
-              </Paper>
-              <Paper
-                elevation={3}
-                className="text-white font-bold bg-orange-500 flex flex-col justify-center items-center"
-              >
-                Gallery
-              </Paper>
+              <div className="grid grid-cols-2   justify-center gap-5 h-full w-full pt-4">
+                <div className="col-span-2 row-span-1 flex justify-center ">
+                  <div
+                    style={{
+                      backgroundColor: "#e5e7eb !important",
+                      borderRadius: "16px",
+                      display: "inline-block", // Prevents extra width
+                      margin: "0 auto", // Centers the box
+                    }}
+                  >
+                    <Calendar
+                      className="col-span-1 bg-cyan-400"
+                      onChange={() => {}} // No selection logic needed
+                      value={new Date(trip.startDate)} // Set initial view date
+                      tileClassName={tileClassName} // Highlight logic applied here
+                      tileDisabled={() => false} // Ensure all dates are active for display
+                    />
+                  </div>
+                </div>
+                <div className="col-span-2 row-span-1 bg-[#d1fa9a] p-3 m-0 rounded-2xl h-[200px] shadow-lg overflow-hidden">
+                  <TodoList tripId={trip._id} />
+                </div>
+              </div>
             </Box>
+            <div className="p-5 flex flex-col justify-center items-center">
+              <Box
+                sx={{
+                  display: "flex",
+                  flexWrap: "no-wrap",
+                  gap: 5,
+                  "& > :not(style)": { m: 0, width: 96, height: 96 },
+                }}
+              >
+                <Paper
+                  elevation={3}
+                  className="mx-5 text-white font-bold bg-red-500 flex flex-col justify-center items-center"
+                >
+                  Bookings
+                </Paper>
+                <Paper
+                  elevation={3}
+                  onClick={handleClick}
+                  className="text-white font-bold bg-green-400 flex flex-col justify-center items-center"
+                >
+                  Expenses
+                </Paper>
+                <Paper
+                  elevation={3}
+                  className="text-white font-bold bg-orange-500 flex flex-col justify-center items-center"
+                >
+                  Gallery
+                </Paper>
+              </Box>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };

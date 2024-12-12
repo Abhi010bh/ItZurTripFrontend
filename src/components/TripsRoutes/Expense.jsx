@@ -7,37 +7,48 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import {QuickAccess} from "../QuickAccess";
+import { ClearIcon } from '@mui/x-date-pickers';
 
 export const Expenses = () => {
   const [expenses, setExpenses] = useState([]);
   const [newExpense, setNewExpense] = useState({
     description: '',
     amount: '',
+    category:'',
     date: '',
     paidBy: '',
   });
   const { token } = useAuth();
   const location = useLocation();
   const tripId = location.state?.trip?._id;
+  
+  const fetchExpenses = async () => {
+    try {
+      const response = await axios.get(`http://localhost:8000/Expense/${tripId}/activeExpenses`, {
+        headers: {
+          Authorization: `bearer ${token}`
+        }
+      });
+      setExpenses(response.data);
+      console.log(response.data);
+      
+      
+    } catch (error) {
+      console.error("Error fetching expenses:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchExpenses = async () => {
-      try {
-        const response = await axios.get(`http://localhost:8000/trips/${tripId}/expenses`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-        setExpenses(response.data);
-      } catch (error) {
-        console.error("Error fetching expenses:", error);
-      }
-    };
+    
 
+    console.log(tripId);
+    
     if (tripId) {
       fetchExpenses();
     }
-  }, [tripId, token]);
+  }, []);
+
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -50,9 +61,9 @@ export const Expenses = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`http://localhost:8000/trips/${tripId}/expenses`, newExpense, {
+      const response = await axios.post(`http://localhost:8000/Expense/${tripId}/expenses`, newExpense, {
         headers: {
-          Authorization: `Bearer ${token}`
+          Authorization: `bearer ${token}`
         }
       });
       setExpenses([...expenses, response.data]);
@@ -62,6 +73,27 @@ export const Expenses = () => {
       console.error("Error adding expense:", error);
     }
   };
+
+  const handleReimburse = async (expenseId) =>{
+    
+    try{
+      const response = await axios.put(`http://localhost:8000/Expense/${tripId}/${expenseId}/reimburse`, {
+        headers: {
+          Authorization: `bearer ${token}`
+        }
+      });
+      console.log(response);
+      
+
+      if(response.status==200){
+        fetchExpenses();
+        alert('Staus update success: Expense Reimbursed');
+      }
+    }
+    catch(error){
+
+    }
+  }
 
   return (
     <>
@@ -73,10 +105,13 @@ export const Expenses = () => {
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           {expenses.map(expense => (
             <Paper key={expense._id} elevation={3} className="bg-green-400 text-white p-4 mb-2">
+             
               <p className="text-gray-200"><strong className="text-white">Description:</strong> {expense.description}</p>
+              <p className="text-gray-200"><strong className="text-white">Category:</strong> {expense.category}</p>
               <p className="text-gray-200"><strong className="text-white">Amount:</strong> ${expense.amount}</p>
               <p className="text-gray-200"><strong className="text-white">Date:</strong> {new Date(expense.date).toLocaleDateString()}</p>
               <p className="text-gray-200"><strong className="text-white">Paid By:</strong> {expense.paidBy}</p>
+              <span className='text-red-700 font-bold' onClick={()=>{ handleReimburse(expense._id);}}>Reimburse</span>
             </Paper>
           ))}
         </Box>
@@ -106,10 +141,21 @@ export const Expenses = () => {
                  onChange={handleChange}
                  required
                /></div>
+                <div className="mb-4">
+              <label className="block text-lg font-bold mb-2" htmlFor="source">
+                Category
+              </label>
+              <TextField className="bg-transparent border-b-0 border-t-0 border-l-0 border-r-0 w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+                 label="Category"
+                 name="category"
+                 value={newExpense.category}
+                 onChange={handleChange}
+                 required
+               /></div>
           
           <div className="mb-4">
               <label className="block text-lg font-bold mb-2" htmlFor="source">
-                Amount
+                Date
               </label>
               <TextField className="bg-transparent border-b-0 border-t-0 border-l-0 border-r-0 w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
                   label="Date"
@@ -123,7 +169,7 @@ export const Expenses = () => {
           
           <div className="mb-4">
               <label className="block text-lg font-bold mb-2" htmlFor="source">
-                Amount
+                Paid By
               </label>
              
           <TextField className="bg-transparent border-b-0 border-t-0 border-l-0 border-r-0 w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"

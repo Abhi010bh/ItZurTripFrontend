@@ -29,7 +29,7 @@ export const FormComponent = ()=>{
     password:""
   })
 
-  const {setToken}= useAuth()
+  const {setToken,setUserName,setUserID}= useAuth()
   
   
   const handleLogin=async (event)=>{
@@ -40,6 +40,10 @@ export const FormComponent = ()=>{
       if (resp.status === 200) {
         alert("Login successful");
         setToken(resp.data.token)
+        console.log(resp.data.userName);
+        
+        setUserName(resp.data.userName)
+        setUserID(resp.data.userID)
         navigate("/ProfileInterface");
       }
     } catch (error) {

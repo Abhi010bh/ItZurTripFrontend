@@ -122,7 +122,7 @@ function MapDashboard({ positions, totalDistance, formData, token ,navigate}) {
         <span className="font-bold text-orange-400">Locations selected:</span>
         {positions.map((position, index) => (
           <div className="text-brown-800">
-            {position.CityDetails.formattedAddress}
+            {position.cityDetails.formattedAddress}
           </div>
         ))}
       </div>
@@ -170,11 +170,11 @@ const FetchPlaceName = async (newMarker, apiKey, requestId, setTrip) => {
     console.log(data.results[0]);
 
     const newTripElement = {
-      CityDetails: {
+      cityDetails: {
         formattedAddress: `${data.results[0].formatted_address}`,
         place_ID: `${data.results[0].place_id}`,
       },
-      CityCoordinates: `${newMarker}`,
+      cityCoordinates: `${newMarker}`,
     };
     setTrip((trips) => [...trips, newTripElement]);
   } catch (error) {
@@ -191,7 +191,7 @@ const AddMarkersOnClick = ({ setMarkers, setTrip }) => {
     const newMarker = [event.latlng.lat, event.latlng.lng];
     FetchPlaceName(newMarker, apiKey, requestId, setTrip);
     setMarkers((markers) => [...markers, newMarker]);
-    console.log(formData);
+    
   });
 };
 
@@ -199,16 +199,31 @@ function Map({ formData }) {
   const [markers, setMarkers] = useState([]);
   const [cities, setCities] = useState([]);
   const [trip, setTrip] = useState([]);
+  const [center,setCenter] = useState({lat: 15.852792,lng: 74.498703,});
   const { token } = useAuth();
   const { setTripID } = useAuth();
   const navigate = useNavigate();
 
   const totalDistance = CalculateTotalDistance(markers);
 
-  const center = {
-    lat: 15.852792,
-    lng: 74.498703,
-  };
+ 
+
+  useEffect(()=>{
+    if(navigator.geolocation){
+      navigator.geolocation.getCurrentPosition(
+        (position)=>{
+          const {latitude:lat,longitude:lng} = position.coords;
+          setCenter({lat,lng});
+        
+        }
+      )
+    }
+    else{
+      alert(`Geo location not supported!`);
+      
+    }
+
+  },[])
 
   return (
     <>
@@ -224,6 +239,7 @@ function Map({ formData }) {
           />
 
           <AddMarkersOnClick setMarkers={setMarkers} setTrip={setTrip} />
+          
 
           {markers.map((marker, index) => (
             <Marker key={index} position={marker} />

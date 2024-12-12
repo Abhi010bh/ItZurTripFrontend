@@ -46,8 +46,21 @@ export const QuickAccess=()=>{
     return (
         <SpeedDial
     ariaLabel="SpeedDial basic example"
-    sx={{ position: "fixed", bottom: 16, right: 16 }}
-    icon={<SpeedDialIcon />}
+    sx={{
+        position: "fixed",
+        bottom: 16,
+        right: 16,
+        "& .MuiSpeedDial-fab": {
+          backgroundColor: "#1565c0", // Set background color
+          color: "#fff", // Set icon color
+          "&:hover": {
+            backgroundColor: "#1976d2", // Hover effect for the button
+          },
+        },
+      }}
+      icon={<SpeedDialIcon />}
+   
+    
   >
     {actions.map((action) => (
       <SpeedDialAction
@@ -55,6 +68,7 @@ export const QuickAccess=()=>{
         icon={action.icon}
         tooltipTitle={action.name}
         onClick={action.click}
+        
       />
     ))}
   </SpeedDial>
