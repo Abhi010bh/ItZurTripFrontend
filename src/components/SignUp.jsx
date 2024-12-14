@@ -4,19 +4,15 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/open-sans"; // Defaults to weight 400
 import "@fontsource/open-sans/400.css"; // Specify weight
 import "@fontsource/open-sans/400-italic.css";
-import {
-  Card,
-  Input,
-  Checkbox,
-  Button,
-  Typography,
-} from "@material-tailwind/react";
+import { Card, Input, Checkbox, Button, Typography } from "@material-tailwind/react";
 import { FormControl } from "@mui/material";
 import ArrowCircleRight from "@mui/icons-material/ArrowCircleRight";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../provider/authProvider";
+import { Snackbar } from "@mui/material"; // Import Snackbar component
+import MuiAlert from "@mui/material/Alert"; // Import Alert for styled Snackbar
 
 export const SignUp = () => {
   const navigate = useNavigate();
@@ -28,23 +24,43 @@ export const SignUp = () => {
     confirmPassword: "",
   });
 
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success"); // "success" or "error"
+
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    // Check if passwords match
     if (User.password !== User.confirmPassword) {
-      console.log("Passwords do not match");
+      setSnackbarMessage("Passwords do not match!");
+      setSnackbarSeverity("error");
+      setOpenSnackbar(true);
       return;
     }
+
     try {
       const resp = await axios.post("http://localhost:8000/User/register", {
         emailID: User.emailID,
         UserName: User.username,
         password: User.password,
       });
+
       console.log(resp.data);
 
-      navigate("/login"); // Redirect to login after successful signup
+      setSnackbarMessage("Registration successful! Redirecting to login...");
+      setSnackbarSeverity("success");
+      setOpenSnackbar(true);
+
+      // Redirect to login page after a short delay
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000); // Delay to show the success message before navigating
     } catch (e) {
       console.log(e);
+      setSnackbarMessage("An error occurred during registration. Please try again.");
+      setSnackbarSeverity("error");
+      setOpenSnackbar(true);
     }
   };
 
@@ -57,6 +73,10 @@ export const SignUp = () => {
     });
 
     console.log(User);
+  };
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
   };
 
   return (
@@ -154,6 +174,22 @@ export const SignUp = () => {
           </button>
         </div>
       </form>
+
+      {/* Snackbar Notification */}
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <MuiAlert
+          elevation={6}
+          variant="filled"
+          severity={snackbarSeverity}
+          onClose={handleCloseSnackbar}
+        >
+          {snackbarMessage}
+        </MuiAlert>
+      </Snackbar>
     </div>
   );
 };

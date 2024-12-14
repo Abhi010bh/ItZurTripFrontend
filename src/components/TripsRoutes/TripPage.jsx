@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { CircularProgress, Box, Typography } from "@mui/material"; // Import necessary components
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../provider/authProvider";
-import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import RenderMap from "../MapComponents/RenderMap";
 import dayjs from "dayjs";
@@ -142,8 +142,28 @@ export const TripPage = () => {
     navigate(`/Trip/Expense`, { state: { trip } });
   };
 
+  const handleBookingClick=()=> {
+    navigate(`/Trip/Booking`, { state: { trip } });
+  }
+
   if (loading) {
-    return <div>Loading trip details...</div>; // Show loading message while fetching
+    // Redesigned loading message and spinner
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress size={60} color="primary" />
+        <Typography variant="h6" sx={{ marginTop: 2 }}>
+          Loading trip details, please wait...
+        </Typography>
+      </Box>
+    );
   }
 
   return (
@@ -166,7 +186,6 @@ export const TripPage = () => {
                       src={Avatar1}
                       style={{ minHeight: "64px", minWidth: "64px" }}
                     />
-
                     <div className="ml-2 text-center  text-3xl font-semibold p-5 ">
                       Welcome, {userName}!
                     </div>
@@ -225,38 +244,30 @@ export const TripPage = () => {
                 <div className="col-span-2 row-span-1 bg-[#d1fa9a] p-3 m-0 rounded-2xl h-[200px] shadow-lg overflow-hidden">
                   <TodoList tripId={trip._id} />
                 </div>
+                <div className="flex justify-center gap-6 mx-auto items-center ml-10 pl-10">
+  <Paper
+    elevation={3}
+    onClick={handleBookingClick}
+    className="bg-red-500 text-white font-bold p-4 flex items-center justify-center rounded-lg cursor-pointer"
+  >
+    Bookings
+  </Paper>
+  <Paper
+    elevation={3}
+    onClick={handleClick}
+    className="bg-green-400 text-white font-bold p-4 flex items-center justify-center rounded-lg cursor-pointer"
+  >
+    Expenses
+  </Paper>
+  <Paper
+    elevation={3}
+    className="bg-orange-500 text-white font-bold p-4 flex items-center justify-center rounded-lg cursor-pointer"
+  >
+    Gallery
+  </Paper>
+</div>
               </div>
             </Box>
-            <div className="p-5 flex flex-col justify-center items-center">
-              <Box
-                sx={{
-                  display: "flex",
-                  flexWrap: "no-wrap",
-                  gap: 5,
-                  "& > :not(style)": { m: 0, width: 96, height: 96 },
-                }}
-              >
-                <Paper
-                  elevation={3}
-                  className="mx-5 text-white font-bold bg-red-500 flex flex-col justify-center items-center"
-                >
-                  Bookings
-                </Paper>
-                <Paper
-                  elevation={3}
-                  onClick={handleClick}
-                  className="text-white font-bold bg-green-400 flex flex-col justify-center items-center"
-                >
-                  Expenses
-                </Paper>
-                <Paper
-                  elevation={3}
-                  className="text-white font-bold bg-orange-500 flex flex-col justify-center items-center"
-                >
-                  Gallery
-                </Paper>
-              </Box>
-            </div>
           </div>
         </div>
       </div>

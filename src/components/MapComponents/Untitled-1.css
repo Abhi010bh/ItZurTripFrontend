@@ -1,0 +1,172 @@
+
+/* General calendar styling */
+.react-calendar {
+  border: none;
+  border-radius: 16px;
+  background-color: #f9f9fb;
+  padding:1rem;
+  font-family: 'Inter', sans-serif; /* Clean, modern font */
+  color: #3b3b3b; /* Neutral text color */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  width: 720px;
+  max-width: 100%; /* Ensure responsiveness */
+  margin: 0 auto; /* Center the calendar */
+}
+
+/* Month and navigation styling */
+.react-calendar__navigation {
+  display: flex;
+  background: #f9f9fb;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.react-calendar__navigation button {
+  background: #f9f9fb;
+  border: none;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #3b3b3b;
+  cursor: pointer;
+}
+
+.react-calendar__navigation button:hover {
+  color: #6c63ff; /* Subtle hover effect */
+}
+
+/* Weekday names styling */
+.react-calendar__month-view__weekdays {
+  display: grid; /* Added this line */
+  grid-template-columns: repeat(7, 1fr); /* Ensures 7 columns */
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  color: #6c757d; /* Subtle gray color */
+  padding-bottom: 0.5rem; /* Adds space between weekdays and the day tiles */
+}
+
+.react-calendar__month-view__weekdays__weekday {
+  padding: 0.5rem;
+}
+
+/* Calendar grid layout */
+.react-calendar__month-view__days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr); /* Ensures 7 columns */
+  grid-gap: 1rem;
+}/* Remove underlines and outlines */
+.react-calendar__month-view__weekdays__weekday,
+.react-calendar__month-view__weekdays__weekday a {
+  text-decoration: none;
+  outline: none !important;
+}
+
+/* Day tiles styling */
+.react-calendar__tile {
+  background: #f9f9fb;
+  border-radius: 8px;
+  padding: 0.8rem;
+  text-align: center;
+  font-size: 0.9rem;
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.react-calendar__tile:hover {
+  background: #e8e8ff; /* Subtle hover color */
+  color: #6c63ff;
+  font-weight: 600;
+}
+
+/* Highlighted dates (like today's date) */
+.react-calendar__tile--now {
+  background: #ffe4b5;
+  color: #3b3b3b;
+  font-weight: 700;
+  border-radius: 8px;
+}
+
+/* Active/selected dates */
+.react-calendar__tile--active {
+  background: #6c63ff;
+  color: white;
+  border-radius: 8px;
+}
+
+/* Event block styling */
+.react-calendar__tile .event {
+  
+  color: #3b3b3b;
+  padding: 0.3rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-align: center;
+  margin: 0.2rem auto;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Make event blocks responsive */
+.react-calendar__tile .event:hover {
+  background-color: #b6a3ff;
+  color: white;
+  font-weight: 600;
+}
+
+/* Ensure events stack neatly */
+.react-calendar__tile .event-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+
+
+/* Calendar grid layout */
+.react-calendar__month-view__days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-gap: 1rem;
+}
+
+.react-calendar__month-view__weekdays abbr {
+  text-decoration: none; /* Remove underline */
+  -webkit-text-decoration: none; /* For WebKit browsers */
+}
+
+
+<div className="text-white m-10 mt-11  max-h-sm rounded-2xl overflow-hidden shadow-lg bg-cyan-500">
+                <img
+                  className="w-full"
+                  src="../../../public/images/Barcelona.jpg"
+                  alt="Sunset in the mountains"
+                />
+                <div className="px-6 py-4">
+                  <div className="font-bold text-xl mb-2">{trip.tripName}</div>
+                  <p className="text-white italic mb-2">
+                    {trip.sourceInfo &&
+                      trip.destinationInfo &&
+                      `${trip.sourceInfo} to ${trip.destinationInfo}`}
+                  </p>
+                </div>
+                <div className="px-6 pt-4 pb-2">
+                  <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                    Add Users
+                  </span>
+                  <span
+                    className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
+                    onClick={() => EditTrip(trip, navigate)}
+                  >
+                    Edit Trip
+                  </span>
+                  <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                    Delete Trip
+                  </span>
+                </div>
+              </div>

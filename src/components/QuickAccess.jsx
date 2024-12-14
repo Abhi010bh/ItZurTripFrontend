@@ -2,51 +2,50 @@ import React from "react";
 import SpeedDial from "@mui/material/SpeedDial";
 import SpeedDialIcon from "@mui/material/SpeedDialIcon";
 import SpeedDialAction from "@mui/material/SpeedDialAction";
-import FileCopyIcon from "@mui/icons-material/FileCopyOutlined";
-import SaveIcon from "@mui/icons-material/Save";
-import PrintIcon from "@mui/icons-material/Print";
-import ShareIcon from "@mui/icons-material/Share";
-import LoginIcon from '@mui/icons-material/Login';
-import LogoutTwoToneIcon from '@mui/icons-material/LogoutTwoTone';
-import { Home, ArrowBack, List, Login, LoginTwoTone } from "@mui/icons-material";
+import HomeIcon from "@mui/icons-material/Home"; // Home icon
+import ArrowBackIcon from "@mui/icons-material/ArrowBack"; // Back icon
+import LoginIcon from "@mui/icons-material/Login"; // Login icon
+import PersonAddIcon from "@mui/icons-material/PersonAdd"; // SignUp icon
 import { useNavigate } from "react-router-dom";
 
+export const QuickAccess = () => {
+  const navigator = useNavigate();
 
-export const QuickAccess=()=>{
-    const navigator = useNavigate();
-    const actions = [
-        {
-          icon: <Home />,
-          name: "Home",
-          click: () => {
-            navigator("/");
-          },
-        },
-        {
-          icon: <ArrowBack />,
-          name: "Back",
-          click: () => {
-            navigator("/animate");
-          },
-        },
-        {
-          icon: <LoginTwoTone />,
-          name: "Login",
-          click: () => {
-            navigator("/Login");
-          },
-        },
-        {
-          icon: <ShareIcon />,
-          name: "SignUp",
-          click: () => {navigator("/SignUp")},
-        },
-      ];
-    
-    return (
-        <SpeedDial
-    ariaLabel="SpeedDial basic example"
-    sx={{
+  const actions = [
+    {
+      icon: <HomeIcon />,
+      name: "Home",
+      click: () => {
+        navigator("/"); // Navigate to the Home page
+      },
+    },
+    {
+      icon: <ArrowBackIcon />,
+      name: "Back",
+      click: () => {
+        navigator(-1); // Navigate back to the previous page
+      },
+    },
+    {
+      icon: <LoginIcon />,
+      name: "Login",
+      click: () => {
+        navigator("/Login"); // Navigate to the Login page
+      },
+    },
+    {
+      icon: <PersonAddIcon />,
+      name: "Sign Up",
+      click: () => {
+        navigator("/SignUpForm"); // Navigate to the SignUp page
+      },
+    },
+  ];
+
+  return (
+    <SpeedDial
+      ariaLabel="SpeedDial basic example"
+      sx={{
         position: "fixed",
         bottom: 16,
         right: 16,
@@ -59,18 +58,15 @@ export const QuickAccess=()=>{
         },
       }}
       icon={<SpeedDialIcon />}
-   
-    
-  >
-    {actions.map((action) => (
-      <SpeedDialAction
-        key={action.name}
-        icon={action.icon}
-        tooltipTitle={action.name}
-        onClick={action.click}
-        
-      />
-    ))}
-  </SpeedDial>
-    )
-}
+    >
+      {actions.map((action) => (
+        <SpeedDialAction
+          key={action.name}
+          icon={action.icon}
+          tooltipTitle={action.name}
+          onClick={action.click}
+        />
+      ))}
+    </SpeedDial>
+  );
+};

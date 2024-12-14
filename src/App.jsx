@@ -6,12 +6,13 @@ import LoginForm from "./components/LoginForm";
 import SignUpForm from "./components/SignUpForm";
 import PrivateRoute from "./components/PrivateRoute";
 import ProfileInterface from "./components/ProfileInterface";
-import {AddTrip} from "./components/TripsRoutes/AddTrip";
+import { AddTrip } from "./components/TripsRoutes/AddTrip";
 import { Trip } from "./components/Trip";
 import { TripPage } from "./components/TripsRoutes/TripPage";
 import { Expenses } from "./components/TripsRoutes/Expense";
 import Map from "./components/MapComponents/Map";
 import { EditTrip } from "./components/TripsRoutes/EditTrip";
+import BookingApp from "./components/TripsRoutes/BookingApp";
 
 function App() {
   return (
@@ -30,7 +31,12 @@ function App() {
           <Route path="/TripProfile" element={<PrivateRoute element={Trip} />} />
           <Route path="/Trip/View/" element={<PrivateRoute element={TripPage} />} />
           <Route path="/Trip/Expense" element={<PrivateRoute element={Expenses} />} />
-         
+          <Route path="/Trip/Booking" element={<PrivateRoute element={BookingApp} />} />
+
+          {/* Additional Routes for Bottom Navigation */}
+          <Route path="/Recents" element={<div>Recents Page</div>} />
+          <Route path="/Favorites" element={<div>Favorites Page</div>} />
+          <Route path="/Nearby" element={<div>Nearby Page</div>} />
         </Routes>
       </BrowserRouter>
     </StyledEngineProvider>
